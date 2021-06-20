@@ -2,7 +2,7 @@
 
 ## System Requirement
 
-Server running PHP 5.0 or higher with PostgeSQL database extension, file and composer commands installed
+Server running PHP 5.0 or higher with PostgeSQL database extension, composer command installed
 
 ## Installation
 
