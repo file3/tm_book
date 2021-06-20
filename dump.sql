@@ -2380,14 +2380,14 @@ INSERT INTO authors VALUES (4, 'Blaga Dimitrova');
 -- Data for Name: books; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO books VALUES (6, 1, 'Конец духа', '/home/fattila/_projects/zz_work/transfermate/data/book4/cyrilic/index.xml');
-INSERT INTO books VALUES (7, 3, '標準', '/home/fattila/_projects/zz_work/transfermate/data/book4/japanese/index.xml');
-INSERT INTO books VALUES (8, 2, '책 1', '/home/fattila/_projects/zz_work/transfermate/data/book4/korean/index.xml');
 INSERT INTO books VALUES (1, 1, 'End of spirit', '/home/fattila/_projects/zz_work/transfermate/data/book1/index.xml');
 INSERT INTO books VALUES (2, 2, 'Book 1', '/home/fattila/_projects/zz_work/transfermate/data/book2/book1/index.xml');
 INSERT INTO books VALUES (3, 2, 'Book 2', '/home/fattila/_projects/zz_work/transfermate/data/book2/book2book1/index.xml');
 INSERT INTO books VALUES (4, 3, 'Standard', '/home/fattila/_projects/zz_work/transfermate/data/book2/index.xml');
 INSERT INTO books VALUES (5, 4, 'Book Book 1', '/home/fattila/_projects/zz_work/transfermate/data/book3/book4/index.xml');
+INSERT INTO books VALUES (6, 1, 'Конец духа', '/home/fattila/_projects/zz_work/transfermate/data/book4/cyrilic/index.xml');
+INSERT INTO books VALUES (7, 3, '標準', '/home/fattila/_projects/zz_work/transfermate/data/book4/japanese/index.xml');
+INSERT INTO books VALUES (8, 2, '책 1', '/home/fattila/_projects/zz_work/transfermate/data/book4/korean/index.xml');
 
 
 --
