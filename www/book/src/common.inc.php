@@ -63,7 +63,7 @@ interface DB
     public function num_fields($res);
     public function num_rows($res);
     public function insert_id($db, $seq);
-    public function last_insert_id($db);
+    public function last_insert_id($db, $seq);
     public function error($db);
 }
 
@@ -106,8 +106,11 @@ class DB_PgSQL implements DB
         return $row['nextval'];
     }
 
-    public function last_insert_id($db)
+    public function last_insert_id($db, $seq)
     {
+        $res = pg_query($db, "SELECT last_value FROM ".$seq);
+        $row = pg_fetch_array($res, NULL, PGSQL_ASSOC);
+        return $row['last_value'];
     }
 
     public function error($db)
@@ -150,9 +153,12 @@ class DB_MySQL implements DB
 
     public function insert_id($db, $seq)
     {
+        $res = mysqli_query($db, "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=\"".DB_NAME."\" AND TABLE_NAME=\"".$seq."\"");
+        $row = mysqli_fetch_assoc($res);
+        return $row['AUTO_INCREMENT'];
     }
 
-    public function last_insert_id($db)
+    public function last_insert_id($db, $seq)
     {
         return mysqli_insert_id($db);
     }
