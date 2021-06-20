@@ -9,16 +9,19 @@ Server running PHP 5.0 or higher with PostgeSQL database extension, file and com
 *Under working directory*
 
 $ git clone https://github.com/file3/tm_book.git
+
 $ cd tm_book
 
 *Or*
 
 $ tar xzf book.tgz
+
 $ cd transfermate
 
 *Or*
 
 $ unzip book.zip
+
 $ cd transfermate
 
 *Modify setup.sql, INPUT_DATA and DB_XXXX defines in file www/book/src/config.php according to the server environment*
