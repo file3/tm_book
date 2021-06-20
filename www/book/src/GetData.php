@@ -23,6 +23,7 @@ class GetDataFrame
         $this->db->set_charset($this->dbi, DB_CHARSET);
 
         if (!is_cli()):
+            $q = htmlspecialchars(pgstr("q"));
             echo  <<<EOD
 <!DOCTYPE html>
 <html>
@@ -60,7 +61,7 @@ input, label {
 <body>
 <label for="site-search">Search the site:</label>
 <form>
-  <input type="search" id="site-search" name="q" aria-label="Search through site content" placeholder="Search through site content">
+  <input type="search" id="site-search" name="q" aria-label="Search through site content" placeholder="Search through site content" value="$q">
   <button>Search</button>
 </form>
 
