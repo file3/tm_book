@@ -1,0 +1,30 @@
+#!/bin/bash
+
+cd `dirname $0` || exit 1
+PROJECT=`basename $PWD`
+echo "--- [$(date)] BACKUP $PROJECT"
+
+DATE=`date +%u`
+TARSRCFILE=$PROJECT-src_$DATE.tgz
+TARFILE=${PROJECT}_$DATE.tgz
+ZIPFILE=$HOME/ftp/career/$PROJECT/book.zip
+
+find -type l -exec ls -lAd {} \; | sort -k 9 >info.txt
+
+pg_dump -c -d --no-owner -h localhost -U pesysadmin transfermate >dump.sql
+
+cd .. || exit 1
+#tar czhf $TARSRCFILE \
+#  --exclude=$PROJECT/bin_* \
+#  --exclude=$PROJECT/upload* \
+#  --exclude=$PROJECT/www_* \
+#  $PROJECT
+tar czhf $TARFILE $PROJECT
+#chgrp $PROJECT $TARSRCFILE
+
+DIR=`sed -e "s:^$HOME/::g" <<<$PWD`
+
+cp -pu $TARFILE $HOME/ftp/career/$PROJECT/book.tgz
+zip -qr $ZIPFILE $PROJECT
+#scp -p -P 65111 $TARSRCFILE fattila@sysinfo.hu:ftp/_projects/_dantesinferno/
+#scp -p $TARSRCFILE fattila_fattila@teameliteclub.com:ftp/_projects/_dantesinferno/
