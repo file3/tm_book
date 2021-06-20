@@ -15,7 +15,7 @@ CREATE TABLE books
     boid        SERIAL  NOT NULL PRIMARY KEY,
     author      INT     NOT NULL REFERENCES authors ON DELETE CASCADE,  -- auid
     name        TEXT    NOT NULL,
-    path        TEXT    NOT NULL
+    path        TEXT    NOT NULL UNIQUE
 );
 
 -- SELECT NEXTVAL('authors_auid_seq');

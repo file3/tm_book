@@ -71,7 +71,7 @@ class DB_PgSQL implements DB
 {
     public function connect($host, $user, $pass, $name)
     {
-        return pg_connect('host='.$host.' user='.$user.' password='.$pass.' dbname='.$name);
+        return pg_pconnect('host='.$host.' user='.$user.' password='.$pass.' dbname='.$name);
     }
 
     public function set_charset($db, $charset)

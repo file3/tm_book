@@ -9,7 +9,7 @@ define('CHARSET', 'UTF-8');
 define('LOCALE', 'hu_HU');
 define('KEYWORDS', 'Transfermate,Book Registry');
 
-define('INPUT_DATA', '/home/fattila/_projects/zz_work/transfermate/data');
+define('INPUT_DATA', '/home/fattila/_projects/zz_work/transfermate/data'); // index file data root directory
 
 //define('DB_MYSQL', true); // uncomment in case of mysql database backend
 define('DB_HOST', 'localhost');

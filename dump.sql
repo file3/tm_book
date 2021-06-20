@@ -16,6 +16,7 @@ ALTER TABLE ONLY public.pg_ts_dict DROP CONSTRAINT pg_ts_dict_pkey;
 ALTER TABLE ONLY public.pg_ts_cfgmap DROP CONSTRAINT pg_ts_cfgmap_pkey;
 ALTER TABLE ONLY public.pg_ts_cfg DROP CONSTRAINT pg_ts_cfg_pkey;
 ALTER TABLE ONLY public.books DROP CONSTRAINT books_pkey;
+ALTER TABLE ONLY public.books DROP CONSTRAINT books_path_key;
 ALTER TABLE ONLY public.authors DROP CONSTRAINT authors_pkey;
 ALTER TABLE ONLY public.authors DROP CONSTRAINT authors_name_key;
 ALTER TABLE public.books ALTER COLUMN boid DROP DEFAULT;
@@ -2488,6 +2489,14 @@ ALTER TABLE ONLY authors
 
 ALTER TABLE ONLY authors
     ADD CONSTRAINT authors_pkey PRIMARY KEY (auid);
+
+
+--
+-- Name: books_path_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY books
+    ADD CONSTRAINT books_path_key UNIQUE (path);
 
 
 --

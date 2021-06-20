@@ -3,6 +3,9 @@ require('src/GetData.php');
 
 $gd = new GetData();
 
-$gd->load();
-$gd->view();
+if (is_cli()) {
+    $gd->load();
+} else {
+    $gd->view();
+}
 ?>

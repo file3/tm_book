@@ -1,11 +1,17 @@
 <?php
 require('common.inc.php');
 
+/**
+ * \brief Initialize database, print beginning and ending of web-page if not called from CLI
+ */
 class GetDataFrame
 {
     protected $db = NULL;
     protected $dbi = NULL;
 
+    /**
+     * \brief Initialize database, print beginning of web-page if not called from CLI
+     */
     public function __construct()
     {
         if (!defined('DB_MYSQL')) {
@@ -16,12 +22,13 @@ class GetDataFrame
         $this->dbi = $this->db->connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $this->db->set_charset($this->dbi, DB_CHARSET);
 
-        echo  <<<EOD
+        if (!is_cli()):
+            echo  <<<EOD
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Book</title>
+<title>Book Registry</title>
 <style>
 label {
     display: block;
@@ -30,6 +37,7 @@ label {
 
 input, label {
     margin: .4rem 0;
+    width: 10%;
 }
 
 .grid-container {
@@ -39,7 +47,7 @@ input, label {
 }
 .grid-item {
     border: 1px solid rgba(0, 0, 0, 0.8);
-    font-size: 30px;
+    font-size: 20px;
     text-align: left;
     padding-left: 10px;
     padding-right: 10px;
@@ -52,33 +60,42 @@ input, label {
 <body>
 <label for="site-search">Search the site:</label>
 <form>
-  <input type="search" id="site-search" name="q" aria-label="Search through site content">
+  <input type="search" id="site-search" name="q" aria-label="Search through site content" placeholder="Search through site content">
   <button>Search</button>
 </form>
 
 EOD;
+        endif;
     }
 
     public function get_db()
     {
-        return $this->db;
+        return $this->db; // for testing
     }
 
     public function get_dbi()
     {
-        return $this->dbi;
+        return $this->dbi; // for testing
     }
 
+    /**
+     * \brief Print ending of web-page if not called from CLI
+     */
     public function __destruct()
     {
-        echo  <<<EOD
+        if (!is_cli()):
+            echo  <<<EOD
 </body>
 </html>
 
 EOD;
+        endif;
     }
 }
 
+/**
+ * \brief Load/View XML files
+ */
 class GetData extends GetDataFrame
 {
     public function __construct()
@@ -86,6 +103,9 @@ class GetData extends GetDataFrame
         parent::__construct();
     }
 
+    /**
+     * \brief Handle one XML file inserting/updateing to database, intended to be called from CLI
+     */
     private function load_one($author, $name, $path)
     {
         $res = $this->db->query($this->dbi, "SELECT * FROM ".AUTHORS_TABLE.", ".BOOKS_TABLE." WHERE auid=author AND UPPER(".AUTHORS_TABLE.".name)=UPPER('".addslashes(ostr($author))."') AND UPPER(".BOOKS_TABLE.".name)=UPPER('".addslashes(ostr($name))."')");
@@ -101,13 +121,18 @@ class GetData extends GetDataFrame
             }
             $this->db->query($this->dbi, "INSERT INTO ".BOOKS_TABLE." (author, name, path) VALUES (".$auid.", '".addslashes(ostr($name))."', '".addslashes(ostr($path))."')");
         } else {
-            $this->db->query($this->dbi, "UPDATE ".BOOKS_TABLE." SET path='".addslashes(ostr($path))."' WHERE boid=".$row["boid"]);
+            if ($row["path"] != ostr($path)) {
+                $this->db->query($this->dbi, "UPDATE ".BOOKS_TABLE." SET path='".addslashes(ostr($path))."' WHERE boid=".$row["boid"]);
+            }
         }
     }
 
+    /**
+     * \brief Load XML files recursively from INPUT_DATA directory into database, intended to be called from CLI
+     */
     public function load()
     {
-        echo "<pre>\n";
+//        echo "<pre>\n";
 
         $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(INPUT_DATA));
         $files = array();
@@ -144,19 +169,24 @@ class GetData extends GetDataFrame
             $this->db->query($this->dbi, "DELETE * FROM ".AUTHORS_TABLE." WHERE auid=".$row["auid"]);
         }
 
-        echo "</pre>\n";
-        echo "<hr>\n";
+//        echo "</pre>\n";
+//        echo "<hr>\n";
     }
 
+    /**
+     * \brief View XML files searching in database, not intended to be called from CLI
+     */
     public function view()
     {
         $q = pgstr("q");
         if ($q) {
             echo "<div class=\"grid-container\">\n";
             $res = $this->db->query($this->dbi, "SELECT ".AUTHORS_TABLE.".name as author, ".BOOKS_TABLE.".name as book FROM ".AUTHORS_TABLE.", ".BOOKS_TABLE." WHERE auid=author AND (UPPER(".AUTHORS_TABLE.".name) LIKE UPPER('%".addslashes($q)."%') OR UPPER(".BOOKS_TABLE.".name) LIKE UPPER('%".addslashes($q)."%')) ORDER BY UPPER(".AUTHORS_TABLE.".name), UPPER(".BOOKS_TABLE.".name)");
+            $delay = 200;
             while($row = $this->db->fetch_assoc($res)) {
-                echo "<div class=\"grid-item\"><marquee class=\"marq\" behavior=\"slide\" direction=\"left\" scrollamount=\"50\" loop=\"1\">".$row["author"]."</marquee></div>\n";
-                echo "<div class=\"grid-item\"><marquee class=\"marq\" behavior=\"slide\" direction=\"left\" scrollamount=\"50\" loop=\"1\">".$row["book"]."</marquee></div>\n";
+                echo "  <div class=\"grid-item\"><marquee class=\"marq\" behavior=\"slide\" direction=\"left\" scrollamount=\"50\" scrolldelay=\"".$delay."\" loop=\"1\">".$row["author"]."</marquee></div>\n";
+                echo "  <div class=\"grid-item\"><marquee class=\"marq\" behavior=\"slide\" direction=\"left\" scrollamount=\"50\" scrolldelay=\"".$delay."\" loop=\"1\">".$row["book"]."</marquee></div>\n";
+                $delay += 200;
             }
             echo "</div>\n";
         }
