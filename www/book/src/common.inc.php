@@ -62,8 +62,8 @@ interface DB
     public function fetch_assoc($res);
     public function num_fields($res);
     public function num_rows($res);
-    public function insert_id($db, $seq);
-    public function last_insert_id($db, $seq);
+    public function insert_id($db, $table, $id);
+    public function last_insert_id($db, $table, $id);
     public function error($db);
 }
 
@@ -99,15 +99,17 @@ class DB_PgSQL implements DB
         return pg_num_rows($res);
     }
 
-    public function insert_id($db, $seq)
+    public function insert_id($db, $table, $id)
     {
+        $seq = $table."_".$id."_seq";
         $res = pg_query($db, "SELECT NEXTVAL('".$seq."')");
         $row = pg_fetch_array($res, NULL, PGSQL_ASSOC);
         return $row['nextval'];
     }
 
-    public function last_insert_id($db, $seq)
+    public function last_insert_id($db, $table, $id)
     {
+        $seq = $table."_".$id."_seq";
         $res = pg_query($db, "SELECT last_value FROM ".$seq);
         $row = pg_fetch_array($res, NULL, PGSQL_ASSOC);
         return $row['last_value'];
@@ -151,14 +153,14 @@ class DB_MySQL implements DB
         return mysqli_num_rows($res);
     }
 
-    public function insert_id($db, $seq)
+    public function insert_id($db, $table, $id)
     {
-        $res = mysqli_query($db, "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=\"".DB_NAME."\" AND TABLE_NAME=\"".$seq."\"");
+        $res = mysqli_query($db, "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=\"".DB_NAME."\" AND TABLE_NAME=\"".$table."\"");
         $row = mysqli_fetch_assoc($res);
         return $row['AUTO_INCREMENT'];
     }
 
-    public function last_insert_id($db, $seq)
+    public function last_insert_id($db, $table, $id)
     {
         return mysqli_insert_id($db);
     }

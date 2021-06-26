@@ -23,6 +23,8 @@ class GetDataFrame
         $this->db->set_charset($this->dbi, DB_CHARSET);
 
         if (!is_cli()):
+            $ml = __("Search the site");
+            $mp = __("Search through site content");
             $q = htmlspecialchars(pgstr("q"));
             echo  <<<EOD
 <!DOCTYPE html>
@@ -59,9 +61,9 @@ input, label {
 </style>
 </head>
 <body>
-<label for="site-search">Search the site:</label>
+<label for="site-search">$ml:</label>
 <form>
-  <input type="search" id="site-search" name="q" aria-label="Search through site content" placeholder="Search through site content" value="$q">
+  <input type="search" id="site-search" name="q" aria-label="$mp" placeholder="$mp" value="$q">
   <button>Search</button>
 </form>
 
@@ -115,7 +117,7 @@ class GetData extends GetDataFrame
             $res = $this->db->query($this->dbi, "SELECT * FROM ".AUTHORS_TABLE." WHERE UPPER(".AUTHORS_TABLE.".name)=UPPER('".addslashes(ostr($author))."')");
             $row = $this->db->fetch_assoc($res);
             if (!$row) {
-                $auid = $this->db->insert_id($this->dbi, "authors_auid_seq");
+                $auid = $this->db->insert_id($this->dbi, AUTHORS_TABLE, "auid");
                 $this->db->query($this->dbi, "INSERT INTO ".AUTHORS_TABLE." (auid, name) VALUES (".$auid.", '".addslashes(ostr($author))."')");
             } else {
                 $auid = $row["auid"];
